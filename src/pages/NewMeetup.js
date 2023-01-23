@@ -5,14 +5,35 @@ const NewMeetupPage = () => {
 
   const history = useHistory()
 
-  const addMeetupHandler = (meetupData) => {
-    fetch("https://meetup-app-58a46-default-rtdb.firebaseio.com/meetups.json", {
-      method: "POST",
-      body: JSON.stringify(meetupData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const addMeetupHandler = async (meetupData) => {
+
+    // fetch("https://meetup-app-58a46-default-rtdb.firebaseio.com/meetups.json", {
+    //   method: "POST",
+    //   body: JSON.stringify(meetupData),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // }).then(() => {
+    //   history.replace("/");
+    // });
+
+    try{
+      let response = await fetch("https://meetup-app-58a46-default-rtdb.firebaseio.com/meetups.json", {
+        method: "POST",
+        body: JSON.stringify(meetupData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if(response.ok){
+        history.replace("/");
+      } 
+
+    } catch (error) {
+      console.log(error);
+    }
+
   };
 
 
