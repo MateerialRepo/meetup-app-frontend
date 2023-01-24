@@ -1,22 +1,55 @@
-import React from "react";
+import {useState, useEffect} from "react";
 import MeetupList from "../components/meetups/MeetupList";
 
-const Dummy_data = [
-  {
-    id: 1,
-    title: "first Item",
-    image:
-      "http://img.izismile.com/img/img7/20141206/640/madonnas_latest_raunchy_photo_shoot_640_11.jpg",
-    description: "lorem Ipsum",
-  },
-];
 
 const AllMeetupsPage = () => {
-  return <section>
-    <h1>All Meetups</h1>
-    <MeetupList meetups = {Dummy_data} />
-  </section>;
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadedMeetups, setLoadedMeetups] = useState([]);
+ 
+
+  useEffect(() => {
+    fetchMeetupsHandler();
+  }, []);
+
+  const fetchMeetupsHandler = async () => {
+    try{
+      let response = await fetch("https://meetup-app-58a46-default-rtdb.firebaseio.com/meetups.json");
+
+      if (response.ok) {
+        const data = await response.json();
+        const meetups = [];
+        for (const key in data) {
+          const meetup = {
+            id: key,
+            ...data[key],
+          };
+
+          meetups.push(meetup);
+        }
+
+        setIsLoading(false);
+        setLoadedMeetups(meetups);
+        console.log(meetups);
+      } else {
+        throw new Error("Error occured while fetching data");
+      }
+
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  } 
+
+  return (
+    <section>
+      <h1>All Meetups</h1>
+      <MeetupList meetups={loadedMeetups} />
+    </section>
+  );
 };
 
 export default AllMeetupsPage;
- 
