@@ -7,10 +7,19 @@ const FavouritesPage = () => {
 
   const favMeetups = favouritesCtx.favourites;
 
+  let content;
+
+  if(favMeetups.length === 0) {
+    content = <p>You got no favourites yet. Start adding some?</p>
+  } else {
+    content = <MeetupList meetups={favMeetups} />
+  }
+
+
   return (
     <section>
       <h1>Favourite Meetups</h1>
-      <MeetupList meetups={favMeetups} />
+      {content}
     </section>
   );
 }
